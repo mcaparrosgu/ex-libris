@@ -33,3 +33,14 @@ Cuaderno de decisiones en orden cronológico. Guarda el porqué, qué se descart
 - **QUÉ SE ROMPIÓ** — Nada: la spec no tenía preguntas abiertas (sección 9.2), así que el plan técnico fluyó sin bloqueos. Se añadió la Fase 2 del recomendador (RAG) como evolución futura, no como bloqueador del inicio.
 - **QUÉ QUEDA PENDIENTE DE ENTENDER** — Cómo se generan los embeddings de los libros en la práctica (script local vs. API). La tabla `curator_profiles` aún no tiene estructura definida en el plan. El reparto equilibrado por género necesita lógica de post-filtrado que se definirá en el Paso 8.
 - **DECISIONES DE DISEÑO CLAVE** — pgvector directo primero, RAG después (coste y rendimiento). RLS como mecanismo principal de aislamiento de datos (no lógica de aplicación). PWA como entrega (no app nativa). Notificaciones in-app como MVP, push como mejora. Modelos de embeddings open-source locales (0 €).
+
+---
+
+## 2026-09-29 · Paso 7: papel de la IA
+
+- **QUÉ SE DECIDIÓ** — IA solo en dos puntos: IA-1 embeddings del catálogo y del perfil (peldaño 1, modelo local `all-MiniLM-L6-v2`, 0 €/mes, riesgo bajo) e IA-2 agente RAG de boost del recomendador (peldaño 2, Fase 2 post-lanzamiento, batch semanal, <1 $/mes, riesgo medio con mitigación de anonimización). Todo lo demás (racha, niveles, títulos, permisos, retroactivo, descartes, reparto por género) es código determinista.
+- **ALTERNATIVAS DESCARTADAS** — Peldaño 3 (workflow encadenado) y peldaño 4 (agente autónomo) para cualquier parte visible de la app: la spec prohíbe el chat y la IA no genera texto visible para la usuaria. IA-2 en peldaño 1: sin acceso al conjunto de documentos no hay análisis de patrones que justifique la Fase 2.
+- **POR QUÉ ESTA** — El error de IA se autocorrige con el mecanismo ya diseñado (botón «este no me engancha» = señal negativa). El boost está acotado (0,5-1,5) y es reversible (borrar `book_boosts` = volver a pgvector puro). Coste 0 € al lanzamiento.
+- **QUÉ SE ROMPIÓ** — Nada bloqueante. Se decidió posponer IA-2 hasta que existan datos reales de lectura: sin datos, el agente no tiene nada que aprender que pgvector no sepa ya.
+- **QUÉ QUEDA PENDIENTE DE ENTENDER** — Análisis de privacidad completo de IA-2 antes de activarla (qué datos salen, a qué proveedora, con qué base legal). Elección del modelo económico exacto para el batch semanal. Cómo medir la tasa de descarte por nivel/género en el dashboard de curación.
+- **DECISIONES DE DISEÑO CLAVE** — La IA no genera texto visible para la usuaria (jamás). La IA no toca racha, progreso ni permisos (esas tablas no aparecen en ninguna herramienta). Errores acotados por diseño (boost 0,5-1,5) y reversibles (borrar tabla = estado anterior). Detección de errores por métricas (tasa de descarte, tasa de finalización A/B).
