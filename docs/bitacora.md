@@ -44,3 +44,13 @@ Cuaderno de decisiones en orden cronológico. Guarda el porqué, qué se descart
 - **QUÉ SE ROMPIÓ** — Nada bloqueante. Se decidió posponer IA-2 hasta que existan datos reales de lectura: sin datos, el agente no tiene nada que aprender que pgvector no sepa ya.
 - **QUÉ QUEDA PENDIENTE DE ENTENDER** — Análisis de privacidad completo de IA-2 antes de activarla (qué datos salen, a qué proveedora, con qué base legal). Elección del modelo económico exacto para el batch semanal. Cómo medir la tasa de descarte por nivel/género en el dashboard de curación.
 - **DECISIONES DE DISEÑO CLAVE** — La IA no genera texto visible para la usuaria (jamás). La IA no toca racha, progreso ni permisos (esas tablas no aparecen en ninguna herramienta). Errores acotados por diseño (boost 0,5-1,5) y reversibles (borrar tabla = estado anterior). Detección de errores por métricas (tasa de descarte, tasa de finalización A/B).
+
+---
+
+## 2026-09-29 · Paso 8: lista de tareas
+
+- **QUÉ SE DECIDIÓ** — Trocear spec, plan técnico, papel de la IA y legal en **86 tareas** agrupadas en **11 hitos**. Cada tarea lleva los archivos que toca, una comprobación manual (que la alumna puede hacer sin saber programar), de qué depende y su casilla. El terreno (Paso 9) queda fuera: solo se lista en el Hito 0 para no perderlo de vista.
+- **ALTERNATIVAS DESCARTADAS** — Una sola tarea llamada «cumplir la normativa» (se troceó en RV-1 a RV-10, registro de tratamiento, anonimización de reseñas y código de prácticas de IA). Fusionar tareas para acortar la lista (se priorizó que cada una quepa en menos de una hora). Meter el registro con Apple en el MVP (cuesta 99 €/año → Fase 2). Construir el agente RAG de boosts ahora (Fase 2, <1 $/mes, cuando existan datos reales).
+- **POR QUÉ ESTA** — La lista es el contrato del bucle de construcción: una tarea por sesión, `/plan` antes y `/clear` después. Que la comprobación la pueda hacer ella con sus ojos evita que el «ya funciona» lo decida el asistente.
+- **QUÉ SE ROMPIÓ** — Al validar la lista apareció una dependencia circular: T77 (pruebas automáticas) decía depender de sí misma. Corregida a T41 y T62. Se cerró además lo que el Paso 6 dejó abierto: la estructura de `curator_profiles` pasa a ser T14 y el post-filtrado por género, T31.
+- **QUÉ QUEDA PENDIENTE DE ENTENDER** — Marcados por la alumna como «sonó a chino»: **embedding, similitud coseno y pgvector**; **RLS** (que el aislamiento lo imponga la base de datos, no la aplicación); **service worker y cola sin conexión**; **evals, guardrails y red team**; y la **tabla de trazabilidad legal** (atar cada RV-x a una tarea y no publicar si alguna queda sin marcar). Quedan en `docs/glosario.md`.
